@@ -1,5 +1,6 @@
 #include "Matrix.h"
-
+#include <iostream>
+#include <iomanip>
 
 Matrix::Matrix()
 {
@@ -120,7 +121,6 @@ vector<double> Matrix::GaussianElimination(vector<double> terms)
       }
       terms[curRow] -= mul * terms[i];
     }
-
   }
 
 
@@ -147,4 +147,36 @@ void Matrix::swapColumns(const int firstCol, const int secondCol)
 Matrix::~Matrix()
 {
   matrix.clear();
+}
+
+std::istream& operator>>(std::istream & in, Matrix & matr)
+{
+  in >> matr.n >> matr.m;
+
+  matr.matrix.assign(matr.n, vector<double>(matr.m, 0));
+  for (auto &i : matr.matrix)
+  {
+    for (auto &j : i)
+    {
+      in >> j;
+    }
+  }
+
+  return in;
+}
+
+std::ostream& operator<<(std::ostream & out, const Matrix & matr)
+{
+  out << std::setprecision(Matrix::outputPrecision);
+
+  for (auto &i : matr.matrix)
+  {
+    for (auto &j : i)
+    {
+      out << std::setw(Matrix::outputWidth) << j << ' ';
+    }
+    out << std::endl;
+  }
+
+  return out;
 }

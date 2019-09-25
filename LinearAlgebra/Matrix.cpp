@@ -11,7 +11,7 @@ Matrix::Matrix(const int & _n, const int & _m)
   n = _n;
   m = _m;
 
-  matrix.assign(n, vector<long double>(m, 0));
+  matrix.assign(n, vector<double>(m, 0));
 }
 
 Matrix::Matrix(const Matrix & copy)
@@ -19,7 +19,7 @@ Matrix::Matrix(const Matrix & copy)
   n = copy.n;
   m = copy.m;
 
-  matrix.resize(n, vector<long double>(m));
+  matrix.resize(n, vector<double>(m));
   for (int i = 0; i < n; ++i)
   {
     for (int j = 0; j < m; ++j)
@@ -34,7 +34,7 @@ const Matrix& Matrix::operator=(const Matrix & copy)
   n = copy.n;
   m = copy.m;
 
-  matrix.resize(n, vector<long double>(m));
+  matrix.resize(n, vector<double>(m));
   for (int i = 0; i < n; ++i)
   {
     for (int j = 0; j < m; ++j)
@@ -46,11 +46,11 @@ const Matrix& Matrix::operator=(const Matrix & copy)
   return *this;
 }
 
-vector<long double> Matrix::GaussianElimination(vector<long double> terms)
+vector<double> Matrix::GaussianElimination(vector<double> terms)
 {
   int maxRow = 0, maxCol = 0;
   auto savedMatrix = matrix;
-  long double maxValue = matrix[0][0];
+  double maxValue = matrix[0][0];
 
  
   // searching for the maximum
@@ -77,12 +77,22 @@ vector<long double> Matrix::GaussianElimination(vector<long double> terms)
     }
     matrix[i][i] = 1;
 
-    //
+    // straightforward motion of the Gaussian algorithm
+    for (int curRow = i + 1; curRow < n; ++curRow)
+    {
+      double mul = matrix[curRow][i];
+      for (int curCol = i; curCol < m; ++curCol)
+      {
+        matrix[curRow][curCol] -= mul * matrix[i][curCol];
+      }
+      terms[curRow] -= mul * terms[i];
+    }
+
 
   }
 
   matrix.swap(savedMatrix);
-  return vector<long double>();
+  return vector<double>();
 }
 
 void Matrix::swapRows(const int firstRow, const int secondRow)

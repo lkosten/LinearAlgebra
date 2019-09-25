@@ -51,8 +51,15 @@ vector<double> Matrix::GaussianElimination(vector<double> terms)
   int maxRow = 0, maxCol = 0;
   auto savedMatrix = matrix;
   double maxValue = matrix[0][0];
+  double determinant = 1;
 
- 
+  vector<int> varPermutation(m);
+  for (int i = 1; i <= m; ++i)
+  {
+    varPermutation[i - 1] = i;
+  }
+
+
   // searching for the maximum
   for (int i = 0; i < n; ++i)
   {
@@ -69,27 +76,55 @@ vector<double> Matrix::GaussianElimination(vector<double> terms)
 
   for (int i = 0; i < n; ++i)
   {
+    // relocating maximum to current row and column
+    swapColumns(i, maxCol);
+    swapRows(i, maxRow);
+    if ((maxCol + maxRow - 2 * i) % 2 == 1)
+    {
+      determinant *= -1;
+    }
+
+    std::swap(terms[i], terms[maxRow]);
+    std::swap(varPermutation[i], varPermutation[maxCol]);
+
+
     // dividing by leading element
     terms[i] /= matrix[i][i];
     for (int j = i + 1; j < m; ++j)
     {
       matrix[i][j] /= matrix[i][i];
     }
+    determinant *= matrix[i][i];
     matrix[i][i] = 1;
+
+    maxValue = maxRow = maxCol = 0;
+
 
     // straightforward motion of the Gaussian algorithm
     for (int curRow = i + 1; curRow < n; ++curRow)
     {
       double mul = matrix[curRow][i];
+
       for (int curCol = i; curCol < m; ++curCol)
       {
         matrix[curRow][curCol] -= mul * matrix[i][curCol];
+
+
+        // searching for the maximum
+        if (abs(maxValue) < abs(matrix[curRow][curCol]))
+        {
+          maxRow = curCol;
+          maxCol = curRow;
+          maxValue = matrix[curRow][curCol];
+        }
       }
       terms[curRow] -= mul * terms[i];
     }
 
-
   }
+
+
+
 
   matrix.swap(savedMatrix);
   return vector<double>();

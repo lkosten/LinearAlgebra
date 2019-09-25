@@ -47,7 +47,49 @@ const Matrix& Matrix::operator=(const Matrix & copy)
   return *this;
 }
 
-vector<double> Matrix::GaussianElimination(vector<double> terms)
+Matrix Matrix::operator-(const Matrix & substracted)
+{
+  auto answer = *this;
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < m; ++j)
+    {
+      answer.matrix[i][j] -= substracted.matrix[i][j];
+    }
+  }
+  return answer;
+}
+
+void Matrix::operator-=(const Matrix & substracted)
+{
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < m; ++j)
+    {
+      matrix[i][j] -= substracted.matrix[i][j];
+    }
+  }
+}
+
+Matrix Matrix::operator*(const Matrix & multiplier)
+{
+  Matrix answer(n, multiplier.m);
+  
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < multiplier.m; ++j)
+    {
+      for (int k = 0; k < m; ++k)
+      {
+        answer.matrix[i][j] += matrix[i][k] * multiplier.matrix[k][j];
+      }
+    }
+  }
+
+  return answer;
+}
+
+Matrix Matrix::GaussianElimination(vector<double> terms)
 {
   int maxRow = 0, maxCol = 0;
   auto savedMatrix = matrix;
@@ -55,9 +97,9 @@ vector<double> Matrix::GaussianElimination(vector<double> terms)
   double determinant = 1;
 
   vector<int> varPermutation(m);
-  for (int i = 1; i <= m; ++i)
+  for (int i = 0; i < m; ++i)
   {
-    varPermutation[i - 1] = i;
+    varPermutation[i] = i;
   }
 
 
@@ -123,11 +165,28 @@ vector<double> Matrix::GaussianElimination(vector<double> terms)
     }
   }
 
+  // backward motion
+  Matrix answer(m, 1);
+  for (int curVar = m - 1; curVar >= 0; --curVar)
+  {
+    answer.matrix[curVar][0] = terms[curVar];
 
+    for (int ind = curVar + 1; ind < m; ++ind)
+    {
+      answer.matrix[curVar][0] -= answer.matrix[ind][0] * matrix[curVar][ind];
+    }
+  }
+
+  // sorting answer array
+  auto copy = answer;
+  for (int i = 0; i < m; ++i)
+  {
+    copy.matrix[i][0] = answer.matrix[varPermutation[i]][0];
+  }
 
 
   matrix.swap(savedMatrix);
-  return vector<double>();
+  return copy;
 }
 
 void Matrix::swapRows(const int firstRow, const int secondRow)

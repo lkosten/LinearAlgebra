@@ -18,11 +18,15 @@ public:
 
 
   const Matrix& operator=(const Matrix &copy);
+  Matrix operator-(const Matrix &substracted);
+  void operator-=(const Matrix &substracted);
+  Matrix operator*(const Matrix &multiplier);
+
   friend std::istream& operator>>(std::istream &in, Matrix &matr);
   friend std::ostream& operator<<(std::ostream &out, const Matrix &matr);
 
 
-  vector<double> GaussianElimination(vector<double> terms);
+  Matrix GaussianElimination(vector<double> terms);
   void swapRows(const int firstRow, const int secondRow);
   void swapColumns(const int firstCol, const int secondCol);
 

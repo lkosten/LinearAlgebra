@@ -5,7 +5,7 @@ using std::vector;
 
 class Matrix
 {
-  size_t n, m;
+  int n, m;
   vector<vector<long double>> matrix;
 
 public:
@@ -15,7 +15,10 @@ public:
 
 
   const Matrix& operator=(const Matrix &copy);
-
+  
+  vector<long double> GaussianElimination(vector<long double> terms);
+  void swapRows(const int firstRow, const int secondRow);
+  void swapColumns(const int firstCol, const int secondCol);
 
   virtual ~Matrix();
 };

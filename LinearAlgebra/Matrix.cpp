@@ -89,12 +89,12 @@ Matrix Matrix::operator*(const Matrix & multiplier)
   return answer;
 }
 
-Matrix Matrix::GaussianElimination(vector<double> terms)
+Matrix Matrix::GaussianElimination(Matrix terms)
 {
   int maxRow = 0, maxCol = 0;
   auto savedMatrix = matrix;
   double maxValue = matrix[0][0];
-  double determinant = 1;
+  double det = 1;
 
   vector<int> varPermutation(m);
   for (int i = 0; i < m; ++i)
@@ -124,20 +124,20 @@ Matrix Matrix::GaussianElimination(vector<double> terms)
     swapRows(i, maxRow);
     if ((maxCol + maxRow - 2 * i) % 2 == 1)
     {
-      determinant *= -1;
+      det *= -1;
     }
 
-    std::swap(terms[i], terms[maxRow]);
+    std::swap(terms.matrix[i][0], terms.matrix[maxRow][0]);
     std::swap(varPermutation[i], varPermutation[maxCol]);
 
 
     // dividing by leading element
-    terms[i] /= matrix[i][i];
+    terms.matrix[i][0] /= matrix[i][i];
     for (int j = i + 1; j < m; ++j)
     {
       matrix[i][j] /= matrix[i][i];
     }
-    determinant *= matrix[i][i];
+    det *= matrix[i][i];
     matrix[i][i] = 1;
 
     maxValue = maxRow = maxCol = 0;
@@ -161,7 +161,7 @@ Matrix Matrix::GaussianElimination(vector<double> terms)
           maxValue = matrix[curRow][curCol];
         }
       }
-      terms[curRow] -= mul * terms[i];
+      terms.matrix[curRow][0] -= mul * terms.matrix[i][0];
     }
   }
 
@@ -169,7 +169,7 @@ Matrix Matrix::GaussianElimination(vector<double> terms)
   Matrix answer(m, 1);
   for (int curVar = m - 1; curVar >= 0; --curVar)
   {
-    answer.matrix[curVar][0] = terms[curVar];
+    answer.matrix[curVar][0] = terms.matrix[curVar][0];
 
     for (int ind = curVar + 1; ind < m; ++ind)
     {
@@ -184,7 +184,7 @@ Matrix Matrix::GaussianElimination(vector<double> terms)
     copy.matrix[i][0] = answer.matrix[varPermutation[i]][0];
   }
 
-
+  deteminant = det;
   matrix.swap(savedMatrix);
   return copy;
 }
@@ -200,6 +200,11 @@ void Matrix::swapColumns(const int firstCol, const int secondCol)
   {
     std::swap(matrix[i][secondCol], matrix[i][firstCol]);
   }
+}
+
+double Matrix::getDeterminant()
+{
+  return deteminant;
 }
 
 

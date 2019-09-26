@@ -11,6 +11,8 @@ class Matrix
   static const int outputPrecision = 3;
   static const int outputWidth = 7;
 
+  double deteminant;
+
 public:
   Matrix();
   Matrix(const int &_n, const int &_m);
@@ -26,10 +28,10 @@ public:
   friend std::ostream& operator<<(std::ostream &out, const Matrix &matr);
 
 
-  Matrix GaussianElimination(vector<double> terms);
+  Matrix GaussianElimination(Matrix terms);
   void swapRows(const int firstRow, const int secondRow);
   void swapColumns(const int firstCol, const int secondCol);
-
+  double getDeterminant();
  
   virtual ~Matrix();
 };

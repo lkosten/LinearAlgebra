@@ -1,5 +1,6 @@
 #include "Matrix.h"
 #include<fstream>
+#include<iomanip>
 #include<iostream>
 
 const char inputFileName[] = { "inputMatrix.txt" };
@@ -8,14 +9,11 @@ int main()
 {
   std::ifstream input(inputFileName);
   Matrix example;
-  std::vector<double> terms(4);
+  Matrix terms;
 
   input >> example;
-  for (auto &i : terms)
-  {
-    input >> i;
-  }
- 
+  input >> terms;
+
   auto answer = example.GaussianElimination(terms);
   std::cout << example;
 
@@ -23,8 +21,11 @@ int main()
 
   auto incoherence = example * answer;
 
-  //incoherence -= terms;
   std::cout << incoherence;
+
+  std::cout << incoherence - terms;
+
+  std::cout << std::setprecision(30) <<example.getDeterminant();
 
 
   std::cout << std::endl;

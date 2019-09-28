@@ -140,7 +140,7 @@ Matrix Matrix::GaussianElimination(Matrix terms)
     det *= matrix[i][i];
     matrix[i][i] = 1;
 
-    maxValue = maxRow = maxCol = 0;
+    maxValue = maxRow = maxCol = i + 1;
 
 
     // straightforward motion of the Gaussian algorithm
@@ -156,8 +156,8 @@ Matrix Matrix::GaussianElimination(Matrix terms)
         // searching for the maximum
         if (abs(maxValue) < abs(matrix[curRow][curCol]))
         {
-          maxRow = curCol;
-          maxCol = curRow;
+          maxRow = curRow;
+          maxCol = curCol;
           maxValue = matrix[curRow][curCol];
         }
       }
@@ -181,7 +181,7 @@ Matrix Matrix::GaussianElimination(Matrix terms)
   auto copy = answer;
   for (int i = 0; i < m; ++i)
   {
-    copy.matrix[i][0] = answer.matrix[varPermutation[i]][0];
+    copy.matrix[varPermutation[i]][0] = answer.matrix[i][0];
   }
 
   deteminant = det;

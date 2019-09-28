@@ -16,14 +16,18 @@ int main()
 
   auto answer = example.GaussianElimination(terms);
   std::cout << example;
+  std::cout << std::endl;
 
   std::cout << answer;
+  std::cout << std::endl;
 
   auto incoherence = example * answer;
 
   std::cout << incoherence;
+  std::cout << std::endl;
 
   std::cout << incoherence - terms;
+  std::cout << std::endl;
 
   std::cout << std::setprecision(30) <<example.getDeterminant();
 

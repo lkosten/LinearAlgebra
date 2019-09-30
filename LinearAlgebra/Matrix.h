@@ -29,6 +29,7 @@ public:
 
 
   Matrix GaussianElimination(Matrix terms);
+  Matrix ReverseMatrix();
   void swapRows(const int firstRow, const int secondRow);
   void swapColumns(const int firstCol, const int secondCol);
   double getDeterminant();

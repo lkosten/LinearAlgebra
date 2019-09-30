@@ -189,13 +189,120 @@ Matrix Matrix::GaussianElimination(Matrix terms)
   return copy;
 }
 
+Matrix Matrix::ReverseMatrix()
+{
+  int maxRow = 0, maxCol = 0;
+  auto savedMatrix = matrix;
+  double maxValue = matrix[0][0];
+
+  Matrix reverse(n, n);
+  for (int i = 0; i < n; ++i)
+  {
+    reverse.matrix[i][i] = 1;
+  }
+
+  vector<int> rowsPermutation(n), columnsPermutation(n);
+  for (int i = 0; i < n; ++i)
+  {
+    rowsPermutation[i] = columnsPermutation[i] = i;
+  }
+
+  // searching for the maximum
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      if (abs(maxValue) < abs(matrix[i][j]))
+      {
+        maxRow = i;
+        maxCol = j;
+        maxValue = matrix[i][j];
+      }
+    }
+  }
+
+
+  for (int i = 0; i < n; ++i)
+  {
+    // relocating maximum to current row and column
+    swapColumns(i, maxCol);
+    swapRows(i, maxRow);
+
+    reverse.swapRows(i, maxRow);
+
+    std::swap(columnsPermutation[i], columnsPermutation[maxCol]);
+    std::swap(rowsPermutation[i], rowsPermutation[maxRow]);
+
+
+    // dividing by leading element
+    for (int j = 0; j < m; ++j)
+    {
+      if (j != i) matrix[i][j] /= matrix[i][i];
+      reverse.matrix[i][j] /= matrix[i][i];
+    }
+    matrix[i][i] = 1;
+
+    maxValue = maxRow = maxCol = i + 1;
+
+
+    // straightforward motion of the Gaussian algorithm
+    for (int curRow = 0; curRow < n; ++curRow)
+    {
+      if (curRow == i) continue;
+
+      double mul = matrix[curRow][i];
+
+      for (int curCol = 0; curCol < m; ++curCol)
+      {
+        matrix[curRow][curCol] -= mul * matrix[i][curCol];
+        if (curRow == i && curCol == i) matrix[curRow][curCol] = 0;
+
+        reverse.matrix[curRow][curCol] -= mul * reverse.matrix[i][curCol];
+
+        // searching for the maximum
+        if (abs(maxValue) < abs(matrix[curRow][curCol]))
+        {
+          maxRow = curRow;
+          maxCol = curCol;
+          maxValue = matrix[curRow][curCol];
+        }
+      }
+    }
+  }
+
+
+  // sorting rows in reverse matirx
+  for (int curRow = 0; curRow < columnsPermutation.size(); ++curRow)
+  {
+    int rightPos;
+    for (int ind = curRow; ind < columnsPermutation.size(); ++ind)
+    {
+      if (columnsPermutation[ind] == curRow)
+      {
+        std::swap(columnsPermutation[ind], columnsPermutation[curRow]);
+        rightPos = ind;
+        break;
+      }
+    }
+
+    reverse.swapRows(rightPos, curRow);
+  }
+
+  return reverse;
+}
+
+
 void Matrix::swapRows(const int firstRow, const int secondRow)
 {
+  if (firstRow == secondRow) return;
+
   matrix[firstRow].swap(matrix[secondRow]);
 }
 
 void Matrix::swapColumns(const int firstCol, const int secondCol)
 {
+  if (firstCol == secondCol) return;
+
   for (int i = 0; i < m; ++i)
   {
     std::swap(matrix[i][secondCol], matrix[i][firstCol]);

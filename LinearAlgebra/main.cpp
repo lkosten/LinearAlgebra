@@ -29,8 +29,9 @@ int main()
   std::cout << incoherence - terms;
   std::cout << std::endl;
 
-  std::cout << std::setprecision(30) <<example.getDeterminant();
+  std::cout << std::setprecision(30) << example.getDeterminant() << std::endl;
 
+  std::cout << example.ReverseMatrix();
 
   std::cout << std::endl;
 

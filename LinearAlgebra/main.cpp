@@ -31,7 +31,11 @@ int main()
 
   std::cout << std::setprecision(30) << example.getDeterminant() << std::endl;
 
-  std::cout << example.ReverseMatrix();
+  auto rev = example.ReverseMatrix();
+
+  std::cout << rev << std::endl;
+
+  std::cout << (example * rev);
 
   std::cout << std::endl;
 

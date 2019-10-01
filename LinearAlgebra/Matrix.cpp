@@ -288,6 +288,7 @@ Matrix Matrix::ReverseMatrix()
     reverse.swapRows(rightPos, curRow);
   }
 
+  matrix.swap(savedMatrix);
   return reverse;
 }
 

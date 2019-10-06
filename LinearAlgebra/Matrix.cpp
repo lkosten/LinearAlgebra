@@ -189,6 +189,94 @@ Matrix Matrix::GaussianElimination(Matrix terms)
   return copy;
 }
 
+Matrix Matrix::ReverseMatrixGaussian()
+{
+  auto maxPosition = getMaximumPosition();
+  double maxValue = matrix[maxPosition.first][maxPosition.second];
+  auto savedMatrix = matrix;
+
+  Matrix reverse(n, n);
+  for (int i = 0; i < n; ++i)
+  {
+    reverse.matrix[i][i] = 1;
+  }
+
+  vector<int> rowsPermutation(n), columnsPermutation(n);
+  for (int i = 0; i < n; ++i)
+  {
+    rowsPermutation[i] = columnsPermutation[i] = i;
+  }
+
+  // straightforward motion of the Gaussian algorithm
+  for (int i = 0; i < n; ++i)
+  {
+    // relocating maximum to current row and column
+    swapColumns(i, maxPosition.second);
+    swapRows(i, maxPosition.first);
+
+    reverse.swapRows(i, maxPosition.first);
+
+    std::swap(columnsPermutation[i], columnsPermutation[maxPosition.second]);
+    std::swap(rowsPermutation[i], rowsPermutation[maxPosition.first]);
+    
+    reverse.divideRow(i, matrix[i][i]);
+    divideRow(i, matrix[i][i]);
+
+    for (int curRow = i + 1; curRow < m; ++curRow)
+    {
+      reverse.elementaryTransformation(curRow, i, matrix[curRow][i]);
+      elementaryTransformation(curRow, i, matrix[curRow][i]);
+    }
+
+    // updating maximum
+    maxValue = 0;
+    for (int j = i + 1; j < n; ++j)
+    {
+      for (int k = i + 1; k < m; ++k)
+      {
+        if (abs(matrix[j][k]) > maxValue)
+        {
+          maxValue = abs(matrix[j][k]);
+
+          maxPosition = { j, k };
+        }
+      }
+    }
+  }
+
+
+  // backward motion
+  for (int i = n - 1; i >= 0; --i)
+  {
+    for (int j = i - 1; j >= 0; --j)
+    {
+      reverse.elementaryTransformation(j, i, matrix[j][i]);
+      elementaryTransformation(j, i, matrix[j][i]);
+    }
+  }
+
+
+  // sorting reverse matrix
+  for (int curRow = 0; curRow < columnsPermutation.size(); ++curRow)
+  {
+    int rightPos;
+    for (int ind = curRow; ind < columnsPermutation.size(); ++ind)
+    {
+      if (columnsPermutation[ind] == curRow)
+      {
+        std::swap(columnsPermutation[ind], columnsPermutation[curRow]);
+        rightPos = ind;
+        break;
+      }
+    }
+
+    reverse.swapRows(rightPos, curRow);
+  }
+
+  matrix.swap(savedMatrix);
+  return reverse;
+}
+
 Matrix Matrix::ReverseMatrix()
 {
   int maxRow = 0, maxCol = 0;
@@ -310,9 +398,46 @@ void Matrix::swapColumns(const int firstCol, const int secondCol)
   }
 }
 
+void Matrix::elementaryTransformation(const int transformingRow, const int mainRow, const double coefficient)
+{
+  for (int i = 0; i < m; ++i)
+  {
+    matrix[transformingRow][i] -= coefficient * matrix[mainRow][i];
+  }
+}
+
+void Matrix::divideRow(const int row, const double coefficient)
+{
+  for (int i = 0; i < m; ++i)
+  {
+    matrix[row][i] /= coefficient;
+  }
+}
+
 double Matrix::getDeterminant()
 {
   return deteminant;
+}
+
+std::pair<int, int> Matrix::getMaximumPosition()
+{
+  double maxValue = matrix[0][0];
+  std::pair<int, int> position(0, 0);
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < m; ++j)
+    {
+      if (abs(matrix[i][j]) > maxValue)
+      {
+        maxValue = abs(matrix[i][j]);
+
+        position = { i, j };
+      }
+    }
+  }
+
+  return position;
 }
 
 

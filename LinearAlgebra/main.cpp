@@ -31,8 +31,8 @@ int main()
 
   std::cout << std::setprecision(30) << example.getDeterminant() << std::endl;
 
-  auto rev = example.ReverseMatrix();
-
+  auto rev = example.ReverseMatrixGaussian();
+  
   std::cout << rev << std::endl;
 
   std::cout << (example * rev);

@@ -5,6 +5,7 @@ using std::vector;
 
 class Matrix
 {
+private:
   int n, m;
   vector<vector<double>> matrix;
 
@@ -12,6 +13,11 @@ class Matrix
   static const int outputWidth = 7;
 
   double deteminant;
+
+  void swapRows(const int firstRow, const int secondRow);
+  void swapColumns(const int firstCol, const int secondCol);
+  void elementaryTransformation(const int transformingRow, const int mainRow, const double coefficient);
+  void divideRow(const int row, const double coefficient);
 
 public:
   Matrix();
@@ -29,10 +35,10 @@ public:
 
 
   Matrix GaussianElimination(Matrix terms);
+  Matrix ReverseMatrixGaussian();
   Matrix ReverseMatrix();
-  void swapRows(const int firstRow, const int secondRow);
-  void swapColumns(const int firstCol, const int secondCol);
   double getDeterminant();
+  std::pair<int, int> getMaximumPosition();
  
   virtual ~Matrix();
 };

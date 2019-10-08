@@ -380,6 +380,87 @@ Matrix Matrix::ReverseMatrix()
   return reverse;
 }
 
+Matrix Matrix::TransposeMatrix()
+{
+  Matrix transpose(m, n);
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < m; ++j)
+    {
+      transpose.matrix[j][i] = matrix[i][j];
+    }
+  }
+  
+  return transpose;
+}
+
+void Matrix::LUDecomposition(Matrix & L, Matrix & U)
+{
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j <= i; ++j)
+    {
+      L.matrix[i][j] = matrix[i][j];
+      for (int k = 0; k < j; ++k)
+      {
+        L.matrix[i][j] -= L.matrix[i][k] * U.matrix[k][j];
+      }
+    }
+
+    for (int j = i; j < n; ++j)
+    {
+      if (i == j)
+      {
+        U.matrix[i][j] = 1;
+      }
+      else
+      {
+        U.matrix[i][j] = matrix[i][j];
+
+        for (int k = 0; k < i; ++k)
+        {
+          U.matrix[i][j] -= L.matrix[i][k] * U.matrix[k][j];
+        }
+
+        U.matrix[i][j] /= L.matrix[i][i];
+      }
+    }
+  }
+}
+
+Matrix Matrix::SquareRootMethod(Matrix terms)
+{
+  Matrix L(n, n), U(n, n);
+  LUDecomposition(L, U);
+
+  Matrix y(n, 1), x(n, 1);
+  for (int i = 0; i < n; ++i)
+  {
+    y.matrix[i][0] = terms.matrix[i][0];
+    
+    for (int k = 0; k < i; ++k)
+    {
+      y.matrix[i][0] -= L.matrix[i][k] * y.matrix[k][0];
+    }
+
+    y.matrix[i][0] /= L.matrix[i][i];
+  }
+
+  for (int j = n - 1; j >= 0; --j)
+  {
+    x.matrix[j][0] = y.matrix[j][0];
+
+    for (int k = j + 1; k < n; ++k)
+    {
+      x.matrix[j][0] -= U.matrix[j][k] * x.matrix[k][0];
+    }
+  }
+
+  std::cout << *this * x - terms;
+  return x;
+}
+
 
 void Matrix::swapRows(const int firstRow, const int secondRow)
 {

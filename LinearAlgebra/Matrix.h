@@ -37,6 +37,9 @@ public:
   Matrix GaussianElimination(Matrix terms);
   Matrix ReverseMatrixGaussian();
   Matrix ReverseMatrix();
+  Matrix TransposeMatrix();
+  void LUDecomposition(Matrix &L, Matrix &U);
+  Matrix SquareRootMethod(Matrix terms);
   double getDeterminant();
   std::pair<int, int> getMaximumPosition();
  

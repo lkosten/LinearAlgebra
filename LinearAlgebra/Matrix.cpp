@@ -461,6 +461,80 @@ Matrix Matrix::SquareRootMethod(Matrix terms)
   return x;
 }
 
+Matrix Matrix::SquareRootForSymmetric(Matrix terms)
+{
+  Matrix s(n, n);
+  Matrix d(n, n);
+
+  for (int i = 0; i < n; ++i)
+  {
+    s.matrix[i][i] = matrix[i][i];
+    for (int k = 0; k < i; ++k)
+    {
+      s.matrix[i][i] -= s.matrix[k][i] * s.matrix[k][i] * d.matrix[k][k];
+    }
+
+    d.matrix[i][i] = (s.matrix[i][i] < 0 ? -1 : 1);
+    s.matrix[i][i] = sqrt(abs(s.matrix[i][i]));
+
+    for (int j = i + 1; j < n; ++j)
+    {
+      s.matrix[i][j] = matrix[i][j];
+
+      for (int k = 0; k < i; ++k)
+      {
+        s.matrix[i][j] -= d.matrix[k][k] * s.matrix[k][i] * s.matrix[k][j];
+      }
+
+      s.matrix[i][j] /= s.matrix[i][i] * d.matrix[i][i];
+    }
+  }
+
+  auto b = d * s;
+  
+  std::cout << "B\n" << b;
+  std::cout << "s^t * b\n" << s.TransposeMatrix() * b - *this;
+
+  Matrix y(n, 1);
+  for (int i = 0; i < n; ++i)
+  {
+    y.matrix[i][0] = terms.matrix[i][0];
+
+    for (int k = 0; k < i; ++k)
+    {
+      y.matrix[i][0] -= y.matrix[k][0] * s.matrix[k][i];
+    }
+
+    y.matrix[i][0] /= s.matrix[i][i];
+  }
+
+  std::cout << "y\n" << y;
+  std::cout << "s^t * y\n" << s.TransposeMatrix() * y;
+  Matrix x(n, 1);
+  for (int j = n - 1; j >= 0; --j)
+  {
+    x.matrix[j][0] = y.matrix[j][0];
+
+    for (int k = j + 1; k < n; ++k)
+    {
+      x.matrix[j][0] -= b.matrix[j][k] * x.matrix[k][0];
+    }
+
+    x.matrix[j][0] /= b.matrix[j][j];
+  }
+
+  double det = 1;
+  auto tr = s.TransposeMatrix();
+  for (int i = 0; i < n; ++i)
+  {
+    det *= b.matrix[i][i] * tr.matrix[i][i];
+  }
+
+  std::cout << "det\n" << std::setprecision(30) << det << std::endl;
+
+  return x;
+}
+
 
 void Matrix::swapRows(const int firstRow, const int secondRow)
 {

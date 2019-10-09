@@ -14,30 +14,8 @@ int main()
   input >> example;
   input >> terms;
 
-  auto answer = example.GaussianElimination(terms);
-  std::cout << example;
-  std::cout << std::endl;
-
-  std::cout << answer;
-  std::cout << std::endl;
-
-  auto incoherence = example * answer;
-
-  std::cout << incoherence;
-  std::cout << std::endl;
-
-  std::cout << incoherence - terms;
-  std::cout << std::endl; 
-
+  example.GaussianElimination(terms);
   std::cout << std::setprecision(30) << example.getDeterminant() << std::endl;
-
-  auto rev = example.ReverseMatrixGaussian();
-  
-  std::cout << rev << std::endl;
-
-  std::cout << (example * rev);
-
-  std::cout << std::endl;
 
   auto simm = example * example.TransposeMatrix();
   
@@ -46,8 +24,11 @@ int main()
   Matrix L(4, 4), U(4, 4);
   example.LUDecomposition(L, U);
 
-  answer = simm.SquareRootMethod(terms);
-  incoherence = simm * answer;
+  auto answer = simm.GaussianElimination(terms);
+
+  std::cout << answer << std::endl;
+  answer = simm.SquareRootForSymmetric(terms);
+  auto incoherence = simm * answer;
 
   std::cout << answer << std::endl << incoherence - terms;
   system("PAUSE");

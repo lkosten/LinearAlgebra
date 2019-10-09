@@ -40,6 +40,7 @@ public:
   Matrix TransposeMatrix();
   void LUDecomposition(Matrix &L, Matrix &U);
   Matrix SquareRootMethod(Matrix terms);
+  Matrix SquareRootForSymmetric(Matrix terms);
   double getDeterminant();
   std::pair<int, int> getMaximumPosition();
  

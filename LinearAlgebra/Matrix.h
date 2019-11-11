@@ -9,7 +9,7 @@ private:
   int n, m;
   vector<vector<double>> matrix;
 
-  static const int outputPrecision = 3;
+  static const int outputPrecision = 15;
   static const int outputWidth = 7;
 
   const double EPS = 1e-5;
@@ -39,6 +39,7 @@ public:
 
   Matrix GaussianElimination(Matrix terms);
   Matrix SimpleIterationTechique(Matrix terms);
+  Matrix JacobiMethod(Matrix terms);
   Matrix ReverseMatrixGaussian();
   Matrix ReverseMatrix();
   Matrix TransposeMatrix();

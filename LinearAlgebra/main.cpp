@@ -14,10 +14,11 @@ int main()
   input >> example;
   input >> terms;
 
-  example.GaussianElimination(terms);
-  std::cout << std::setprecision(30) << example.getDeterminant() << std::endl;
+  
+  std::cout << std::setprecision(30) << example.GaussianElimination(terms) << std::endl;
+  std::cout << std::setprecision(30) << example.SimpleIterationTechique(terms) << std::endl;
 
-  auto simm = example * example.TransposeMatrix();
+  /*auto simm = example * example.TransposeMatrix();
   
   std::cout << simm << std::endl;
 
@@ -30,7 +31,7 @@ int main()
   answer = simm.SquareRootForSymmetric(terms);
   auto incoherence = simm * answer;
 
-  std::cout << answer << std::endl << incoherence - terms;
+  std::cout << answer << std::endl << incoherence - terms;*/
   system("PAUSE");
   return 0;
 }

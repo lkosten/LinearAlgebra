@@ -60,6 +60,19 @@ Matrix Matrix::operator-(const Matrix & substracted)
   return answer;
 }
 
+Matrix Matrix::operator+(const Matrix & appendum)
+{
+  auto answer = *this;
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < m; ++j)
+    {
+      answer.matrix[i][j] += appendum.matrix[i][j];
+    }
+  }
+  return answer;
+}
+
 void Matrix::operator-=(const Matrix & substracted)
 {
   for (int i = 0; i < n; ++i)
@@ -83,6 +96,21 @@ Matrix Matrix::operator*(const Matrix & multiplier)
       {
         answer.matrix[i][j] += matrix[i][k] * multiplier.matrix[k][j];
       }
+    }
+  }
+
+  return answer;
+}
+
+Matrix Matrix::operator*(const double & multiplier)
+{
+  Matrix answer(n, m);
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < m; ++j)
+    {
+      answer.matrix[i][j] = matrix[i][j] * multiplier;
     }
   }
 
@@ -187,6 +215,40 @@ Matrix Matrix::GaussianElimination(Matrix terms)
   deteminant = det;
   matrix.swap(savedMatrix);
   return copy;
+}
+
+Matrix Matrix::SimpleIterationTechique(Matrix terms)
+{
+  Matrix E(n, n);
+  for (int i = 0; i < n; ++i)
+  {
+    E.matrix[i][i] = 1;
+  }
+
+  Matrix B = TransposeMatrix() * (*this);
+  terms = TransposeMatrix() * terms * (1 / B.secondNorm());
+  B = E - B * (1 / B.secondNorm());
+
+  Matrix xCur = terms;
+  Matrix xPrev = terms;
+
+  Matrix incoherence;
+
+  int counter = 0;
+  std::pair<int, int> incoherenceMaxPos;
+  do
+  {
+    ++counter;
+    xCur = B * xPrev + terms;
+
+    incoherence = xCur - xPrev;
+    std::swap(xCur, xPrev);
+
+    incoherenceMaxPos = incoherence.getMaximumPosition();
+  } while (abs(incoherence.matrix[incoherenceMaxPos.first][incoherenceMaxPos.second]) > EPS);
+
+  std::cout << "Number of iterations " << counter << std::endl;
+  return xCur;
 }
 
 Matrix Matrix::ReverseMatrixGaussian()
@@ -593,6 +655,30 @@ std::pair<int, int> Matrix::getMaximumPosition()
   }
 
   return position;
+}
+
+double Matrix::cubicNorm()
+{
+  auto pos = getMaximumPosition();
+
+  return abs(n * matrix[pos.first][pos.second]);
+}
+
+double Matrix::secondNorm()
+{
+  double ans = 0;
+
+  for (auto &i : matrix)
+  {
+    double cur = 0;
+    for (auto &j : i)
+    {
+      if (abs(j) > cur) cur = abs(j);
+    }
+    ans += cur;
+  }
+
+  return ans;
 }
 
 

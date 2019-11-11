@@ -40,12 +40,14 @@ public:
   Matrix GaussianElimination(Matrix terms);
   Matrix SimpleIterationTechique(Matrix terms);
   Matrix JacobiMethod(Matrix terms);
+  Matrix GaussianSeidelMethod(Matrix terms);
+  Matrix SquareRootMethod(Matrix terms);
+  Matrix SquareRootForSymmetric(Matrix terms);
+
   Matrix ReverseMatrixGaussian();
   Matrix ReverseMatrix();
   Matrix TransposeMatrix();
   void LUDecomposition(Matrix &L, Matrix &U);
-  Matrix SquareRootMethod(Matrix terms);
-  Matrix SquareRootForSymmetric(Matrix terms);
   double getDeterminant();
   std::pair<int, int> getMaximumPosition();
   double cubicNorm();

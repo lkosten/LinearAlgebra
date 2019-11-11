@@ -288,6 +288,49 @@ Matrix Matrix::JacobiMethod(Matrix terms)
   return xCur;
 }
 
+Matrix Matrix::GaussianSeidelMethod(Matrix terms)
+{
+  Matrix xCur = terms;
+  Matrix xPrev = terms;
+
+  Matrix incoherence;
+
+  int counter = 0;
+  std::pair<int, int> incoherenceMaxPos;
+  do
+  {
+    ++counter;
+
+    for (int i = 0; i < n; ++i)
+    {
+      double current = 0;
+      for (int j = 0; j < i - 1; ++j)
+      {
+        if (j == i) continue;
+
+        current -= matrix[i][j] / matrix[i][i] * xCur.matrix[j][0];
+      }
+
+      for (int j = i + 1; j < n; ++j)
+      {
+        if (j == i) continue;
+
+        current -= matrix[i][j] / matrix[i][i] * xPrev.matrix[j][0];
+      }
+      current += terms.matrix[i][0] / matrix[i][i];
+      xCur.matrix[i][0] = current;
+    }
+
+    incoherence = xCur - xPrev;
+    std::swap(xCur, xPrev);
+
+    incoherenceMaxPos = incoherence.getMaximumPosition();
+  } while (abs(incoherence.matrix[incoherenceMaxPos.first][incoherenceMaxPos.second]) > EPS);
+
+
+  return xCur;
+}
+
 Matrix Matrix::ReverseMatrixGaussian()
 {
   auto maxPosition = getMaximumPosition();

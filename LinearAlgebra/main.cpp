@@ -14,11 +14,12 @@ int main()
   input >> example;
   input >> terms;
 
+  std::cout << example;
   
-  std::cout << std::setprecision(30) << example.GaussianElimination(terms) << std::endl;
+  /*std::cout << std::setprecision(30) << example.GaussianElimination(terms) << std::endl;
   std::cout << std::setprecision(30) << example.SimpleIterationTechique(terms) << std::endl;
 
-  /*auto simm = example * example.TransposeMatrix();
+  auto simm = example * example.TransposeMatrix();
   
   std::cout << simm << std::endl;
 

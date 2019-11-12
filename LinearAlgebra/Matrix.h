@@ -9,7 +9,7 @@ private:
   int n, m;
   vector<vector<double>> matrix;
 
-  static const int outputPrecision = 15;
+  static const int outputPrecision = 3;
   static const int outputWidth = 7;
 
   const double EPS = 1e-5;
@@ -17,7 +17,6 @@ private:
 
   void swapRows(const int firstRow, const int secondRow);
   void swapColumns(const int firstCol, const int secondCol);
-  void elementaryTransformation(const int transformingRow, const int mainRow, const double coefficient);
   void divideRow(const int row, const double coefficient);
 
 public:
@@ -47,6 +46,7 @@ public:
   Matrix ReverseMatrixGaussian();
   Matrix ReverseMatrix();
   Matrix TransposeMatrix();
+  void elementaryTransformation(const int transformingRow, const int mainRow, const double coefficient);
   void LUDecomposition(Matrix &L, Matrix &U);
   double getDeterminant();
   std::pair<int, int> getMaximumPosition();
